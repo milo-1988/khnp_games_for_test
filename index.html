@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>KHNP Galaga - 한국수력원자력 친환경 우주 디펜더</title>
     <!-- Tailwind CSS 지원 -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,20 +14,23 @@
             background-color: #05050a;
             overflow: hidden;
             touch-action: none; /* 모바일 드래그 시 브라우저 바운스 방지 */
+            margin: 0;
+            padding: 0;
         }
         .pixel-font {
             font-family: 'Orbitron', sans-serif;
         }
         canvas {
             image-rendering: pixelated;
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+            /* 전체화면 적용을 위해 그림자 제거 및 꽉찬 렌더링 */
+            display: block;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen text-white select-none">
+<body class="bg-black text-white select-none overflow-hidden touch-none w-screen h-screen m-0 p-0">
 
-    <!-- 게임 컨테이너 -->
-    <div class="relative w-full max-w-md h-[100vh] max-h-[850px] bg-black border-0 md:border-4 border-cyan-500/30 md:rounded-2xl overflow-hidden flex flex-col items-center">
+    <!-- 게임 컨테이너 (전체 화면으로 확장) -->
+    <div class="relative w-full h-full bg-black overflow-hidden flex flex-col items-center">
         
         <!-- 점수 및 생명 표시용 탑 바 -->
         <div class="absolute top-0 left-0 w-full p-4 flex justify-between items-center z-10 bg-gradient-to-b from-black/80 to-transparent">
@@ -61,12 +64,12 @@
                 <h2 class="text-lg font-bold tracking-[0.25em] text-cyan-400 pixel-font">KHNP</h2>
                 <p class="text-[10px] tracking-wider text-gray-400">KOREA HYDRO & NUCLEAR POWER</p>
                 
-                <h1 class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 mt-6 pixel-font animate-bounce">GALAGA</h1>
-                <p class="text-xs text-gray-400 mt-1">친환경 에너지 디펜더</p>
+                <h1 class="text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-yellow-300 mt-6 pixel-font animate-bounce">GALAGA</h1>
+                <p class="text-xs md:text-sm text-gray-400 mt-1">친환경 에너지 디펜더</p>
             </div>
 
             <!-- 플레이 가이드 설명 -->
-            <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-4 w-full max-w-xs text-left text-xs space-y-2 text-gray-300">
+            <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-4 w-full max-w-sm text-left text-xs md:text-sm space-y-2 text-gray-300">
                 <p class="text-center font-bold text-cyan-400 border-b border-gray-800 pb-1.5 mb-2">🕹️ 조작 방식 (Controls)</p>
                 <div class="flex justify-between">
                     <span class="font-bold text-white">키보드:</span>
@@ -82,22 +85,22 @@
             </div>
 
             <!-- 게임 시작 버튼 -->
-            <button id="start-btn" class="w-full max-w-xs py-4 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-black font-black tracking-widest rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all duration-200 text-base active:scale-95 mb-8">
+            <button id="start-btn" class="w-full max-w-xs py-4 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-black font-black tracking-widest rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all duration-200 text-base active:scale-95 mb-8 md:mb-16">
                 GAME START
             </button>
         </div>
 
         <!-- [게임오버 화면 오버레이] -->
         <div id="game-over-screen" class="absolute inset-0 bg-black/95 flex flex-col items-center justify-center p-8 text-center hidden z-20">
-            <h1 class="text-5xl font-extrabold text-red-500 tracking-wider pixel-font animate-pulse drop-shadow-[0_0_15px_rgba(239,68,68,0.7)]">GAME OVER</h1>
+            <h1 class="text-5xl md:text-7xl font-extrabold text-red-500 tracking-wider pixel-font animate-pulse drop-shadow-[0_0_15px_rgba(239,68,68,0.7)]">GAME OVER</h1>
             
             <div class="my-8 space-y-2">
-                <p class="text-gray-400 text-sm tracking-widest uppercase">FINAL SCORE</p>
-                <p id="final-score" class="text-5xl font-black text-yellow-400 pixel-font">000000</p>
+                <p class="text-gray-400 text-sm md:text-base tracking-widest uppercase">FINAL SCORE</p>
+                <p id="final-score" class="text-5xl md:text-6xl font-black text-yellow-400 pixel-font">000000</p>
             </div>
 
             <!-- 미션 결과 문구 -->
-            <div id="mission-result" class="mb-8 p-4 bg-gray-900/60 rounded-xl border border-gray-800 max-w-xs text-xs text-gray-300">
+            <div id="mission-result" class="mb-8 p-4 bg-gray-900/60 rounded-xl border border-gray-800 max-w-sm text-xs md:text-sm text-gray-300">
                 <!-- 스크립트에서 동적 업데이트 -->
             </div>
 
@@ -107,7 +110,7 @@
         </div>
 
         <!-- [모바일 가상 컨트롤러 영역] -->
-        <div id="mobile-controls" class="absolute bottom-4 left-0 w-full px-4 flex justify-between items-center z-10 select-none pointer-events-none">
+        <div id="mobile-controls" class="absolute bottom-4 left-0 w-full px-4 md:px-12 flex justify-between items-center z-10 select-none pointer-events-none md:hidden">
             <!-- 좌측 가상 패드 패널 -->
             <div class="flex gap-2 pointer-events-auto">
                 <button id="btn-left" class="w-16 h-16 bg-white/10 hover:bg-white/20 active:bg-cyan-500/40 border border-white/20 rounded-2xl flex items-center justify-center text-white text-2xl font-black transition-all">◀</button>
@@ -118,8 +121,8 @@
         </div>
 
         <!-- 상단 보스 체력 바 (숨김 처리됨, 보스 출현 시 노출) -->
-        <div id="boss-hud" class="absolute top-16 left-0 w-full px-8 z-10 hidden transition-all duration-300">
-            <div class="flex justify-between items-center text-[10px] text-red-400 font-bold mb-1">
+        <div id="boss-hud" class="absolute top-16 left-0 w-full px-8 md:px-32 z-10 hidden transition-all duration-300">
+            <div class="flex justify-between items-center text-[10px] md:text-xs text-red-400 font-bold mb-1">
                 <span>⚠️ KHNP GRID INVADER (BOSS)</span>
                 <span id="boss-hp-text">100%</span>
             </div>
@@ -144,17 +147,33 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
+        // 가상 캔버스 논리 해상도 지정 (상수에서 변수로 변경하여 화면 크기에 동기화)
+        let virtualWidth = window.innerWidth;
+        let virtualHeight = window.innerHeight;
+
         // 반응형 해상도 스케일링 설정
         function resizeCanvas() {
-            const rect = canvas.getBoundingClientRect();
+            const rect = canvas.parentElement.getBoundingClientRect();
             // 선명한 픽셀 렌더링을 위해 디바이스 픽셀 비율 적용
             const dpr = window.devicePixelRatio || 1;
             canvas.width = rect.width * dpr;
             canvas.height = rect.height * dpr;
             ctx.scale(dpr, dpr);
+
+            // 뷰포트 크기에 맞춰 가상 해상도 업데이트 (전체 화면 렌더링의 핵심)
+            virtualWidth = rect.width;
+            virtualHeight = rect.height;
+
+            // 리사이징 시 플레이어 위치 동기화
+            if (typeof player !== 'undefined') {
+                player.y = virtualHeight - 75;
+                // 플레이어가 화면 밖으로 나가는 것 방지
+                if (player.x > virtualWidth - player.width / 2) {
+                    player.x = virtualWidth - player.width / 2;
+                }
+            }
         }
         window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
         // [Web Audio API 합성엔진]
         let audioCtx = null;
@@ -268,10 +287,6 @@
             lastTime: 0
         };
 
-        // 가상 캔버스 논리 해상도 지정
-        const virtualWidth = 360;
-        const virtualHeight = 600;
-
         /**
          * ==========================================
          * 3. 엔티티 정의 (Entities)
@@ -280,11 +295,11 @@
 
         // 1) 플레이어 디펜더 기체
         const player = {
-            x: virtualWidth / 2,
-            y: virtualHeight - 75,
+            x: window.innerWidth / 2, // 초기화 시 중앙 정렬 (수정됨)
+            y: window.innerHeight - 75,
             width: 32,
             height: 32,
-            speed: 5,
+            speed: 6,
             lastShotTime: 0,
             shootInterval: 250, // 발사 주기 (ms)
             isMovingLeft: false,
@@ -350,7 +365,7 @@
                     this.x += this.speed;
                 }
 
-                // 캔버스 이탈 방지 경계 처리
+                // 캔버스 이탈 방지 경계 처리 (동적 virtualWidth 기준 수정)
                 if (this.x < this.width / 2) this.x = this.width / 2;
                 if (this.x > virtualWidth - this.width / 2) this.x = virtualWidth - this.width / 2;
 
@@ -363,12 +378,15 @@
             shoot() {
                 const now = Date.now();
                 if (now - this.lastShotTime >= this.shootInterval) {
-                    bullets.push(new Bullet(this.x, this.y - 18, -6, true));
+                    bullets.push(new Bullet(this.x, this.y - 18, -10, true)); // 총알 속도 상향 보정
                     playSound('laser');
                     this.lastShotTime = now;
                 }
             }
         };
+
+        // DOM 요소 렌더링 이후 캔버스 리사이즈 최초 실행
+        resizeCanvas();
 
         // 2) 발사체 (총알) 클래스
         class Bullet {
@@ -394,7 +412,7 @@
 
             update() {
                 this.y += this.vy;
-                // 화면 이탈 시 소멸
+                // 화면 이탈 시 소멸 (동적 해상도 반영)
                 if (this.y < 0 || this.y > virtualHeight) {
                     this.markedForDeletion = true;
                 }
@@ -414,7 +432,7 @@
                 this.width = 24;
                 this.height = 24;
                 this.hp = type; // 타입별 체력 계수 적용
-                this.speed = 1.2 + (game.level * 0.15);
+                this.speed = 1.5 + (game.level * 0.2);
                 this.markedForDeletion = false;
                 
                 // 편대 이탈 강하 기동 유도용 변수
@@ -488,7 +506,7 @@
 
             update(deltaTime) {
                 // 대형 좌우 정렬 모션 (편대 미세 흐름 연출)
-                const swayOffset = Math.sin(Date.now() * 0.002) * 20;
+                const swayOffset = Math.sin(Date.now() * 0.002) * 30;
 
                 if (this.diveState === 'STATIONARY') {
                     // 편대에 조용히 정렬 대기 상태
@@ -541,14 +559,14 @@
         // 4) 보스 몬스터 (거대 전력망 침략자) 클래스
         class Boss {
             constructor() {
-                this.x = virtualWidth / 2;
+                this.x = virtualWidth / 2; // 화면 중앙 출현 보정
                 this.y = -100; // 상단에서 서서히 진입하도록 설정
                 this.targetY = 110;
-                this.width = 64;
-                this.height = 48;
+                this.width = 120;
+                this.height = 80;
                 this.hpMax = 20 + (game.level * 10);
                 this.hp = this.hpMax;
-                this.speed = 1.0;
+                this.speed = 1.5;
                 this.shootCooldown = 1500;
                 this.lastShootTime = 0;
                 this.state = 'ENTERING'; // ENTERING, BATTLE, RETREAT
@@ -565,9 +583,9 @@
 
                 // 외부 쉴드링 드로잉
                 ctx.strokeStyle = '#f59e0b';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 3;
                 ctx.beginPath();
-                ctx.arc(0, 0, 36 + Math.sin(Date.now() * 0.01) * 3, 0, Math.PI * 2);
+                ctx.arc(0, 0, 50 + Math.sin(Date.now() * 0.01) * 5, 0, Math.PI * 2);
                 ctx.stroke();
 
                 // 육중한 보스 동체
@@ -582,14 +600,14 @@
 
                 // 날개형 에너지 집전 패널 구조
                 ctx.fillStyle = '#f59e0b';
-                ctx.fillRect(-this.width / 2 - 8, -10, 8, 24);
-                ctx.fillRect(this.width / 2, -10, 8, 24);
+                ctx.fillRect(-this.width / 2 - 12, -15, 12, 36);
+                ctx.fillRect(this.width / 2, -15, 12, 36);
 
                 // 보스 원자로 내부 코어 비주얼라이제이션
                 ctx.fillStyle = '#06b6d4'; // Cyan Core
                 ctx.shadowColor = '#00ffff';
                 ctx.beginPath();
-                ctx.arc(0, 5, 8 + Math.sin(Date.now() * 0.02) * 2, 0, Math.PI * 2);
+                ctx.arc(0, 8, 12 + Math.sin(Date.now() * 0.02) * 3, 0, Math.PI * 2);
                 ctx.fill();
 
                 ctx.restore();
@@ -605,9 +623,9 @@
                     }
                 } 
                 else if (this.state === 'BATTLE') {
-                    // 좌우 부드러운 패트롤 기동
+                    // 좌우 부드러운 패트롤 기동 (화면 경계 충돌 처리 동기화)
                     this.x += this.direction * this.speed;
-                    if (this.x < 50 || this.x > virtualWidth - 50) {
+                    if (this.x < this.width || this.x > virtualWidth - this.width) {
                         this.direction *= -1;
                     }
 
@@ -634,8 +652,7 @@
                     for (let angle = -0.3; angle <= 0.35; angle += 0.3) {
                         const vx = Math.sin(angle) * 3;
                         const vy = Math.cos(angle) * 3.5;
-                        bullets.push(new Bullet(this.x, this.y + 20, vy, false, 4, '#fbbf24'));
-                        // 강제 수평 보조 탄막 속도 보정
+                        bullets.push(new Bullet(this.x, this.y + 30, vy, false, 5, '#fbbf24'));
                         bullets[bullets.length - 1].x += vx * 5;
                     }
                 } 
@@ -645,7 +662,7 @@
                     for (let i = 0; i < 3; i++) {
                         setTimeout(() => {
                             if (game.state === 'PLAYING' && boss) {
-                                bullets.push(new Bullet(this.x, this.y + 20, 4.5, false, 3, '#ef4444'));
+                                bullets.push(new Bullet(this.x, this.y + 30, 5, false, 4, '#ef4444'));
                             }
                         }, delay);
                         delay += 180;
@@ -654,8 +671,8 @@
                 else {
                     // 패턴 3: 양익 호위 미니언 급조 소환
                     if (enemies.length < 15) {
-                        enemies.push(new Enemy(this.x - 30, this.y + 10, 1));
-                        enemies.push(new Enemy(this.x + 30, this.y + 10, 1));
+                        enemies.push(new Enemy(this.x - 50, this.y + 20, 1));
+                        enemies.push(new Enemy(this.x + 50, this.y + 20, 1));
                     }
                 }
             }
@@ -666,8 +683,9 @@
         // 5) 우주 전경 성단 배경 입자 (Star Particles)
         class Star {
             constructor() {
-                this.x = Math.random() * virtualWidth;
-                this.y = Math.random() * virtualHeight;
+                // 초기 생성도 전체 화면 너비 기반으로 생성
+                this.x = Math.random() * (window.innerWidth || virtualWidth);
+                this.y = Math.random() * (window.innerHeight || virtualHeight);
                 this.size = Math.random() * 1.5 + 0.5;
                 this.speed = Math.random() * 1.5 + 0.2;
                 this.color = `rgba(${Math.floor(Math.random() * 50 + 200)}, ${Math.floor(Math.random() * 50 + 200)}, 255, ${Math.random() * 0.7 + 0.3})`;
@@ -680,6 +698,7 @@
 
             update() {
                 this.y += this.speed;
+                // 배경이 끝에 도달하면 위로 올려서 무한 렌더링 유지 (해상도 변수 동기화)
                 if (this.y > virtualHeight) {
                     this.y = 0;
                     this.x = Math.random() * virtualWidth;
@@ -687,8 +706,8 @@
             }
         }
 
-        // 별 생성기
-        for (let i = 0; i < 80; i++) {
+        // 별 생성기 (개수 증가)
+        for (let i = 0; i < 150; i++) {
             game.stars.push(new Star());
         }
 
@@ -741,12 +760,18 @@
         function spawnFormation() {
             enemies = [];
             
+            // 화면 크기가 변해도 적 편대가 중앙에 위치하도록 계산 알고리즘 수정
             const rows = 4;
             const cols = 6;
-            const startX = 50;
-            const startY = 70;
-            const gapX = 50;
-            const gapY = 35;
+            
+            // 데스크톱과 모바일의 간격 차이 보정
+            const gapX = virtualWidth > 600 ? 70 : 45; 
+            const gapY = virtualWidth > 600 ? 50 : 35;
+            
+            const formationWidth = (cols - 1) * gapX;
+            // 편대를 캔버스 정중앙에 정렬
+            const startX = (virtualWidth - formationWidth) / 2;
+            const startY = virtualHeight * 0.1;
 
             for (let r = 0; r < rows; r++) {
                 // 상층부로 갈수록 고가치/중장갑 적을 배치하여 갤러그 클래식 느낌 극대화
@@ -825,7 +850,7 @@
             const deltaTime = timestamp - game.lastTime;
             game.lastTime = timestamp;
 
-            // 1) 캔버스 클리어 및 비율 제어
+            // 1) 캔버스 클리어 및 비율 제어 (동적 사이즈 기반 지우기)
             ctx.clearRect(0, 0, virtualWidth, virtualHeight);
 
             // 2) 별빛 배경 연출 및 업데이트 (일시정지와 무관하게 상시 구동)
@@ -854,7 +879,7 @@
                             createExplosion(bullet.x, bullet.y, '#f59e0b', 4);
 
                             if (boss.hp <= 0) {
-                                createExplosion(boss.x, boss.y, '#f59e0b', 30);
+                                createExplosion(boss.x, boss.y, '#f59e0b', 40);
                                 game.score += 1500;
                                 boss = null;
                                 document.getElementById('boss-hud').classList.add('hidden');
@@ -886,7 +911,7 @@
                     else {
                         if (checkCollision(bullet, player)) {
                             bullet.markedForDeletion = true;
-                            createExplosion(player.x, player.y, '#ef4444', 20);
+                            createExplosion(player.x, player.y, '#ef4444', 30);
                             game.lives--;
                             updateLivesUI();
 
@@ -955,7 +980,7 @@
 
                     // 보스와 플레이어가 직접 충돌 시 파괴적 결말
                     if (checkCollision(boss, player)) {
-                        createExplosion(player.x, player.y, '#ef4444', 30);
+                        createExplosion(player.x, player.y, '#ef4444', 40);
                         game.lives = 0;
                         updateLivesUI();
                         triggerGameOver();
@@ -1012,7 +1037,7 @@
             if (game.state === 'PLAYING' && e.touches.length > 0) {
                 const rect = canvas.getBoundingClientRect();
                 const touchX = e.touches[0].clientX - rect.left;
-                // 논리 픽셀 좌표 전환 매핑
+                // 논리 픽셀 좌표 전환 매핑 (수정됨)
                 const logicX = (touchX / rect.width) * virtualWidth;
                 player.x = logicX;
             }
@@ -1052,6 +1077,9 @@
             bullets.length = 0;
             particles.length = 0;
             
+            // 플레이어 중앙 리셋
+            player.x = virtualWidth / 2;
+
             document.getElementById('score-display').innerText = '000000';
             document.getElementById('boss-hud').classList.add('hidden');
             
